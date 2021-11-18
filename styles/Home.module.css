@@ -26,4 +26,13 @@
   border: 1px solid var(--main);
   border-radius: .5rem;
   padding: 1rem;
+  padding-left: 2rem;
+}
+
+.audioPlayerContainer {
+  margin-bottom: 2rem;
+}
+
+.audioPlayer {
+  width: 100%
 }

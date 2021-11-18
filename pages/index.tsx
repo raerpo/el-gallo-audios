@@ -4,33 +4,73 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
+// Components
+import AudioPreview from "../components/AudioPreview";
+
 // Constants
 const BASE_URL = "https://pm.radioacktiva.co.prisasd.com/radioacktiva";
 const SHOW_NAME = "radio_activa_elgallo";
-const SEGMENTS = ["060000_070000", "070000_080000", "080000_090000", "090000_100000", "100000_110000"];
+const SEGMENTS = [
+  "060000_070000",
+  "070000_080000",
+  "080000_090000",
+  "090000_100000",
+  "100000_110000",
+];
 
 // Utils
 const formatDate = (date: string) => {
   return date.split("-").join("/").split("/0").join("/");
+};
+
+// Inteface
+export interface AudioData {
+  name: string;
+  url: string;
+  date: string;
+  segment: string;
 }
 
 // Page
 const Home: NextPage = () => {
   const [date, setDate] = useState(format(new Date(), "yyyy-MM-dd"));
-  const [audiosURLs, setAudiosURLs] = useState<string[]>([]);
+  const [audiosData, setAudiosData] = useState<AudioData[]>([]);
+  const [activeAudio, setActiveAudio] = useState<AudioData>();
 
   const getURLsFromDate = (date: string) => {
-    const allUrls = SEGMENTS.map(segment => `${BASE_URL}/${formatDate(date)}/${SHOW_NAME}_${date.split("-").join("")}_${segment}.mp3`);
-    const urlsPromises = allUrls.map(url => fetch(url));
-    Promise.all(urlsPromises).then(responses => {
-      const validResponses = responses.filter(response => response.status === 200);
-      setAudiosURLs(validResponses.map(response => response.url));
-    })
-  }
+    const allAudiosData: AudioData[] = SEGMENTS.map((segment) => {
+      const hours = segment
+        .split("_")
+        .map((hour) => hour.split("0000").join(""));
+      return {
+        name: `Audio ${date} [${hours.join(" - ")}]`,
+        url: `${BASE_URL}/${formatDate(date)}/${SHOW_NAME}_${date
+          .split("-")
+          .join("")}_${segment}.mp3`,
+        date,
+        segment,
+      };
+    });
+
+    const urlsPromises = allAudiosData.map((audioData) => fetch(audioData.url));
+    Promise.all(urlsPromises).then((responses) => {
+      const validResponses = responses.filter(
+        (response) => response.status === 200
+      );
+      const validURLs = validResponses.map((response) => response.url);
+      setAudiosData(
+        allAudiosData.filter((audioData) => validURLs.includes(audioData.url))
+      );
+    });
+  };
+
+  const handleSetActiveAudio = (audioData: AudioData) => {
+    setActiveAudio(audioData);
+  };
 
   useEffect(() => {
     getURLsFromDate(date);
-  }, [date])
+  }, [date]);
 
   return (
     <div className={styles.container}>
@@ -45,7 +85,6 @@ const Home: NextPage = () => {
       <header className={styles.header}>
         <h1 className={styles.title}>El Gallo</h1>
         <div className={styles.dateSelector}>
-          <label>Fecha</label>
           <input
             type="date"
             value={date}
@@ -53,7 +92,23 @@ const Home: NextPage = () => {
           />
         </div>
       </header>
-      {audiosURLs.length > 0 && <main className={styles.main}>{audiosURLs.map(url => <div key={url}><a target="_blank" rel="noreferrer" href={url}>{url}</a></div>)}</main>}
+      {activeAudio && (
+        <div className={styles.audioPlayerContainer}>
+          <h2>{activeAudio.name}</h2>
+          <audio className={styles.audioPlayer} src={activeAudio.url} controls controlsList="nodownload" />
+        </div>
+      )}
+      {audiosData.length > 0 && (
+        <ul className={styles.main}>
+          {audiosData.map((audioData) => (
+            <AudioPreview
+              key={audioData.url}
+              onClick={handleSetActiveAudio}
+              {...audioData}
+            />
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
