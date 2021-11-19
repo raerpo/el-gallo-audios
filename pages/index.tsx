@@ -101,7 +101,7 @@ const Home: NextPage = () => {
       {activeAudio && (
         <div className={styles.audioPlayerContainer}>
           <h2>{activeAudio.name}</h2>
-          <audio className={styles.audioPlayer} src={activeAudio.url} controls controlsList="nodownload" />
+          <audio className={styles.audioPlayer} src={activeAudio.url} controls controlsList="nodownload" autoPlay />
         </div>
       )}
       {audiosData.length > 0 && (
