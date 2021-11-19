@@ -1,6 +1,15 @@
 .audioPreview {
     color: white;
+    cursor: pointer;
+    margin-bottom: 1rem;
 }
-.audioPreviewActive {
+.audioPreview button {
+    border: none;
+    background-color: transparent;
+    color: inherit;
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+.audioPreviewActive, .audioPreview:hover {
     color: var(--main);
 }

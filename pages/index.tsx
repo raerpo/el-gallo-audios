@@ -72,6 +72,12 @@ const Home: NextPage = () => {
     getURLsFromDate(date);
   }, [date]);
 
+  useEffect(() => {
+    if (activeAudio) {
+      document.title = activeAudio.name;
+    }
+  }, [activeAudio])
+
   return (
     <div className={styles.container}>
       <Head>
