@@ -1,0 +1,6 @@
+.audioPreview {
+    color: white;
+}
+.audioPreviewActive {
+    color: var(--main);
+}

@@ -39,11 +39,11 @@ const Home: NextPage = () => {
 
   const getURLsFromDate = (date: string) => {
     const allAudiosData: AudioData[] = SEGMENTS.map((segment) => {
-      const hours = segment
+      const [hourStart, hourEnd] = segment
         .split("_")
         .map((hour) => hour.split("0000").join(""));
       return {
-        name: `Audio ${date} [${hours.join(" - ")}]`,
+        name: `El gallo ${date} [${hourStart}AM - ${hourEnd}AM]`,
         url: `${BASE_URL}/${formatDate(date)}/${SHOW_NAME}_${date
           .split("-")
           .join("")}_${segment}.mp3`,
@@ -104,6 +104,7 @@ const Home: NextPage = () => {
             <AudioPreview
               key={audioData.url}
               onClick={handleSetActiveAudio}
+              isActive={audioData.name === activeAudio?.name}
               {...audioData}
             />
           ))}
