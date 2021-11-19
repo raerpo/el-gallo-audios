@@ -76,7 +76,7 @@ const Home: NextPage = () => {
     if (activeAudio) {
       document.title = activeAudio.name;
     }
-  }, [activeAudio])
+  }, [activeAudio]);
 
   return (
     <div className={styles.container}>
@@ -101,21 +101,31 @@ const Home: NextPage = () => {
       {activeAudio && (
         <div className={styles.audioPlayerContainer}>
           <h2>{activeAudio.name}</h2>
-          <audio className={styles.audioPlayer} src={activeAudio.url} controls controlsList="nodownload" autoPlay />
+          <audio
+            className={styles.audioPlayer}
+            src={activeAudio.url}
+            controls
+            controlsList="nodownload"
+            autoPlay
+          />
         </div>
       )}
-      {audiosData.length > 0 && (
-        <ul className={styles.main}>
-          {audiosData.map((audioData) => (
-            <AudioPreview
-              key={audioData.url}
-              onClick={handleSetActiveAudio}
-              isActive={audioData.name === activeAudio?.name}
-              {...audioData}
-            />
-          ))}
-        </ul>
-      )}
+      <div className={styles.audioPreviewsContainer}>
+        {audiosData.length > 0 ? (
+          <ul className={styles.audioPreviewsList}>
+            {audiosData.map((audioData) => (
+              <AudioPreview
+                key={audioData.url}
+                onClick={handleSetActiveAudio}
+                isActive={audioData.name === activeAudio?.name}
+                {...audioData}
+              />
+            ))}
+          </ul>
+        ) : (
+          <p className={styles.noAudioMessage}>No hay audios para este dia</p>
+        )}
+      </div>
     </div>
   );
 };

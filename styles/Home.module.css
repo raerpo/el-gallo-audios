@@ -22,15 +22,23 @@
   margin-bottom: .5rem;
 }
 
-.main {
-  border: 1px solid var(--main);
-  border-radius: .5rem;
-  padding: 1rem;
+.audioPreviewsList {
   padding-left: 2rem;
 }
 
 .audioPlayerContainer {
   margin-bottom: 2rem;
+}
+
+.audioPreviewsContainer {
+  border: 1px solid var(--main);
+  border-radius: .5rem;
+  padding: 1rem;
+}
+
+.noAudioMessage {
+  font-size: 1.3rem;
+  text-align: center;
 }
 
 .audioPlayer {
