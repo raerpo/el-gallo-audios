@@ -34,11 +34,11 @@
   border: 1px solid var(--main);
   border-radius: .5rem;
   padding: 1rem;
+  margin-bottom: 2rem;
 }
 
 .noAudioMessage {
   font-size: 1.3rem;
-  text-align: center;
 }
 
 .audioPlayer {

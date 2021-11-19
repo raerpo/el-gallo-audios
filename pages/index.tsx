@@ -114,19 +114,8 @@ const Home: NextPage = () => {
           />
         </div>
       </header>
-      {activeAudio && (
-        <div className={styles.audioPlayerContainer}>
-          <h2>{activeAudio.name}</h2>
-          <audio
-            className={styles.audioPlayer}
-            src={activeAudio.url}
-            controls
-            controlsList="nodownload"
-            autoPlay
-          />
-        </div>
-      )}
       <div className={styles.audioPreviewsContainer}>
+        <h2>Audios del dia {date}</h2>
         {audiosData.length > 0 ? (
           <ul className={styles.audioPreviewsList}>
             {audiosData.map((audioData) => (
@@ -143,6 +132,18 @@ const Home: NextPage = () => {
           <p className={styles.noAudioMessage}>No hay audios para este dia</p>
         )}
       </div>
+      {activeAudio && (
+        <div className={styles.audioPlayerContainer}>
+          <h2>{activeAudio.name}</h2>
+          <audio
+            className={styles.audioPlayer}
+            src={activeAudio.url}
+            controls
+            controlsList="nodownload"
+            autoPlay
+          />
+        </div>
+      )}
     </div>
   );
 };
