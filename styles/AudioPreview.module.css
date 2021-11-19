@@ -13,3 +13,6 @@
 .audioPreviewActive, .audioPreview:hover {
     color: var(--main);
 }
+.audioPreviewPlayed:before {
+    content: "✅";
+}

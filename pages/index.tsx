@@ -1,7 +1,8 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import useLocalStorage from "use-local-storage";
 import styles from "../styles/Home.module.css";
 
 // Components
@@ -36,6 +37,10 @@ const Home: NextPage = () => {
   const [date, setDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [audiosData, setAudiosData] = useState<AudioData[]>([]);
   const [activeAudio, setActiveAudio] = useState<AudioData>();
+  const [playedAudios, setPlayedAudios] = useLocalStorage<string[]>(
+    "radioacktiva_audios",
+    []
+  );
 
   const getURLsFromDate = (date: string) => {
     const allAudiosData: AudioData[] = SEGMENTS.map((segment) => {
@@ -68,6 +73,16 @@ const Home: NextPage = () => {
     setActiveAudio(audioData);
   };
 
+  const handleSavePlayedAudios = useCallback(() => {
+    if (activeAudio) {
+      setPlayedAudios((audios) => {
+        return playedAudios.includes(activeAudio.name)
+          ? audios
+          : [...audios, activeAudio.name];
+      });
+    }
+  }, [activeAudio, playedAudios, setPlayedAudios])
+
   useEffect(() => {
     getURLsFromDate(date);
   }, [date]);
@@ -75,8 +90,9 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (activeAudio) {
       document.title = activeAudio.name;
+      handleSavePlayedAudios();
     }
-  }, [activeAudio]);
+  }, [activeAudio, handleSavePlayedAudios]);
 
   return (
     <div className={styles.container}>
@@ -118,6 +134,7 @@ const Home: NextPage = () => {
                 key={audioData.url}
                 onClick={handleSetActiveAudio}
                 isActive={audioData.name === activeAudio?.name}
+                wasPlayed={playedAudios.includes(audioData.name)}
                 {...audioData}
               />
             ))}
